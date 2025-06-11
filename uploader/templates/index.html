@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Uploader et fusionner une image</title>
+</head>
+<body>
+    <h1>Upload ta photo</h1>
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type="file" name="photo" required>
+        <button type="submit">Envoyer</button>
+    </form>
+
+    {% if photo %}
+        <h2>Résultat :</h2>
+        <img src="{{ photo.result.url }}" alt="Image fusionnée" style="max-width:400px;">
+        <p><a href="{{ photo.result.url }}" download="result.jpg">Télécharger l'image</a></p>
+    {% endif %}
+</body>
+</html>
