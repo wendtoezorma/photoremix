@@ -2,20 +2,142 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Uploader et fusionner une image</title>
+    <title>Grand Culte de la Jeunesse de Bogodogo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="/media/originals/favicon.png">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #f2f2f2;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            padding: 20px;
+            width: 95%;
+            max-width: 420px;
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: #333;
+            text-align: center;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        input[type="file"] {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 0.95rem;
+        }
+
+        .btn {
+            background-color: #1976d2;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 1rem;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        .btn:hover {
+            background-color: #125ca1;
+        }
+
+        .btn-share {
+            background-color: #125ca1;
+            margin-top: 15px;
+        }
+
+        .btn-share:hover {
+            background-color: #09064f;
+        }
+
+        .result {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .result img {
+            width: 100%;
+            border-radius: 8px;
+            max-height: 400px;
+            object-fit: contain;
+        }
+
+        a {
+            display: inline-block;
+            margin-top: 10px;
+            color: #1976d2;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 15px;
+            }
+        }
+    </style>
 </head>
 <body>
-    <h1>Upload ta photo</h1>
-    <form method="POST" enctype="multipart/form-data">
-        {% csrf_token %}
-        <input type="file" name="photo" required>
-        <button type="submit">Envoyer</button>
-    </form>
+    <div class="container">
+        <h1>Ajouter ma photo</h1>
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <input type="file" name="photo" required>
+            <button type="submit" class="btn">Envoyer</button>
+        </form>
 
-    {% if photo %}
-        <h2>Résultat :</h2>
-        <img src="{{ photo.result.url }}" alt="Image fusionnée" style="max-width:400px;">
-        <p><a href="{{ photo.result.url }}" download="result.jpg">Télécharger l'image</a></p>
-    {% endif %}
+        {% if photo %}
+        <div class="result">
+            <h2>Résultat :</h2>
+            <img src="{{ photo.result.url }}" alt="Image fusionnée">
+            <p><a href="{{ photo.result.url }}" download="result.jpg">📥 Télécharger l'image</a></p>
+        </div>
+        {% endif %}
+
+        <button id="shareSiteBtn" class="btn btn-share">🔗 Invitez les autres</button>
+    </div>
+
+    <script>
+        const shareSiteBtn = document.getElementById('shareSiteBtn');
+
+        if (shareSiteBtn && navigator.share) {
+            shareSiteBtn.addEventListener('click', async () => {
+                try {
+                    await navigator.share({
+                        title: "Grand Culte de la Jeunesse de Bogodogo",
+                        text: "Viens associer ta photo à l'affiche du GCJ de Bogodogo ! 🙌",
+                        url: "https://GodwinZ.pythonanywhere.com"
+                    });
+                } catch (err) {
+                    alert("Le partage a été annulé ou a échoué.");
+                }
+            });
+        } else if (shareSiteBtn) {
+            shareSiteBtn.style.display = 'none';
+        }
+    </script>
 </body>
 </html>
